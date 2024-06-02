@@ -83,6 +83,12 @@ async function run() {
       res.send(result)
     })
 
+    // get all scholarship data 
+    app.get('/scholarships',async(req,res) =>{
+      const result = await scholarshipsCollection.find().toArray()
+      res.send(result)
+    })
+
 
 
 
