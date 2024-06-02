@@ -32,6 +32,7 @@ async function run() {
 
 
     const usersCollection = client.db('scholarShip').collection('users')
+    const scholarshipsCollection = client.db('scholarShip').collection('scholarships')
 
 
 
@@ -55,18 +56,32 @@ async function run() {
     })
 
     // delete user 
-    app.delete('/users/:id',async(req, res) =>{
-      const id = req.params.id 
-      const query= {_id: new ObjectId(id)}
+    app.delete('/users/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await usersCollection.deleteOne(query)
       res.send(result)
     })
 
     // update user role 
-    app.patch('/users/admin/:id',async(req,res) =>{
-      
-    })
+    // app.patch('/users/:id',async(req,res) =>{
+    //   const id = req.params.id
+    //   const role = req.body
+    //   const filter = {_id: new ObjectId(id)}
+    //   const updatedDoc ={
+    //     $set:{role:role}
+    //   }
+    //   const result = await usersCollection.updateOne(filter, updatedDoc)
+    //   res.send(result)
+    // })
 
+
+    // scholarship data post 
+    app.post('/scholarships', async (req, res) => {
+      const data = req.body
+      const result = await scholarshipsCollection.insertOne(data)
+      res.send(result)
+    })
 
 
 
