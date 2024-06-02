@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const app= express()
+const app = express()
 const port = process.env.PORT || 5000
 
 
@@ -13,7 +13,7 @@ app.use(express.json())
 
 
 
- 
+
 const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_pass}@cluster0.nhw8ipw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -37,15 +37,21 @@ async function run() {
 
 
     // post users 
-    app.post('/users',async(req, res) =>{
-        const user = req.body
-        const query = {email: user?.email}
-        const existingUser = await usersCollection.findOne(query)
-        if(existingUser){
-            return
-        }
-        const result = await usersCollection.insertOne(user)
-        res.send(result)
+    app.post('/users', async (req, res) => {
+      const user = req.body
+      const query = { email: user?.email }
+      const existingUser = await usersCollection.findOne(query)
+      if (existingUser) {
+        return
+      }
+      const result = await usersCollection.insertOne(user)
+      res.send(result)
+    })
+
+    // get users 
+    app.get('/users', async (req, res) => {
+      const result = await usersCollection.find().toArray()
+      res.send(result)
     })
 
 
@@ -68,9 +74,9 @@ run().catch(console.dir);
 
 
 
-app.get('/',(req,res)=>{
-    res.send('server is running..............')
+app.get('/', (req, res) => {
+  res.send('server is running..............')
 })
-app.listen(port , ()=>{
-    console.log(`server in running on port : ${port}`)
+app.listen(port, () => {
+  console.log(`server in running on port : ${port}`)
 })
