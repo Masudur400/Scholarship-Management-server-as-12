@@ -55,15 +55,15 @@ async function run() {
       res.send(result)
     })
 
-
+    // get users by id 
     app.get('/users/:id', async (req, res) => {
-      const id = req.params.id  
-      const query = {_id: new ObjectId(id)} 
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await usersCollection.findOne(query)
       res.send(result)
     })
 
-     
+
 
     // delete user 
     app.delete('/users/:id', async (req, res) => {
@@ -74,17 +74,17 @@ async function run() {
     })
 
     // update user role 
-    app.patch('/users/:id',async(req,res) =>{ 
+    app.patch('/users/:id', async (req, res) => {
       const id = req.params.id
-      console.log('patch id',id)
+      console.log('patch id', id)
       const currentUser = req.body
-      const filter = {_id: new ObjectId(id)}
-      const updatedDoc ={
-        $set:{ 
-          image:currentUser.image,
-          email:currentUser.email,
-          name:currentUser.name,
-          role:currentUser.role
+      const filter = { _id: new ObjectId(id) }
+      const updatedDoc = {
+        $set: {
+          image: currentUser.image,
+          email: currentUser.email,
+          name: currentUser.name,
+          role: currentUser.role
         }
       }
       const result = await usersCollection.updateOne(filter, updatedDoc)
@@ -100,51 +100,51 @@ async function run() {
     })
 
     // get all scholarship data 
-    app.get('/scholarships',async(req,res) =>{
+    app.get('/scholarships', async (req, res) => {
       const result = await scholarshipsCollection.find().toArray()
       res.send(result)
     })
 
     // get scholarship data by id 
-    app.get('/scholarships/:id' ,async(req,res) =>{
-      const id = req.params.id 
-      const query = {_id : new ObjectId(id)}
+    app.get('/scholarships/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await scholarshipsCollection.findOne(query)
       res.send(result)
     })
 
     // delete a scholarship data 
     app.delete('/scholarships/:id', async (req, res) => {
-      const id = req.params.id 
-      const query = {_id : new ObjectId(id)}
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await scholarshipsCollection.deleteOne(query)
       res.send(result)
     })
 
     // update a scholarship data 
-    app.patch('/scholarships/:id', async(req, res) =>{
-      const data = req.body 
-      const id = req.params.id 
-      const filter = {_id : new ObjectId(id)}
+    app.patch('/scholarships/:id', async (req, res) => {
+      const data = req.body
+      const id = req.params.id
+      const filter = { _id: new ObjectId(id) }
       const updatedDoc = {
-        $set:{
+        $set: {
           postDate: data.postDate,
-          applicationDeadline:data.applicationDeadline,
-          postedUserEmail:data.postedUserEmail,
-          scholarshipName:data.scholarshipName,
-          universityCity:data.universityCity,
-          universityCountry:data.universityCountry,
-          universityName:data.universityName,
-          universityWorldRank:data.universityWorldRank,
-          subjectCategory:data.subjectCategory,
-          scholarshipCategory:data.scholarshipCategory,
-          degree:data.degree,
-          applicationFees:data.applicationFees,
-          serviceCharge:data.serviceCharge,
-          image:data.image
+          applicationDeadline: data.applicationDeadline,
+          postedUserEmail: data.postedUserEmail,
+          scholarshipName: data.scholarshipName,
+          universityCity: data.universityCity,
+          universityCountry: data.universityCountry,
+          universityName: data.universityName,
+          universityWorldRank: data.universityWorldRank,
+          subjectCategory: data.subjectCategory,
+          scholarshipCategory: data.scholarshipCategory,
+          degree: data.degree,
+          applicationFees: data.applicationFees,
+          serviceCharge: data.serviceCharge,
+          image: data.image
         }
       }
-      const result = await scholarshipsCollection.updateOne(filter,updatedDoc)
+      const result = await scholarshipsCollection.updateOne(filter, updatedDoc)
       res.send(result)
     })
 
@@ -163,7 +163,7 @@ async function run() {
     // await client.close();
   }
 }
-run().catch(console.dir); 
+run().catch(console.dir);
 
 
 
