@@ -55,6 +55,16 @@ async function run() {
       res.send(result)
     })
 
+
+    app.get('/users/:id', async (req, res) => {
+      const id = req.params.id  
+      const query = {_id: new ObjectId(id)} 
+      const result = await usersCollection.findOne(query)
+      res.send(result)
+    })
+
+     
+
     // delete user 
     app.delete('/users/:id', async (req, res) => {
       const id = req.params.id
@@ -64,16 +74,22 @@ async function run() {
     })
 
     // update user role 
-    // app.patch('/users/:id',async(req,res) =>{
-    //   const id = req.params.id
-    //   const role = req.body
-    //   const filter = {_id: new ObjectId(id)}
-    //   const updatedDoc ={
-    //     $set:{role:role}
-    //   }
-    //   const result = await usersCollection.updateOne(filter, updatedDoc)
-    //   res.send(result)
-    // })
+    app.patch('/users/:id',async(req,res) =>{ 
+      const id = req.params.id
+      console.log('patch id',id)
+      const currentUser = req.body
+      const filter = {_id: new ObjectId(id)}
+      const updatedDoc ={
+        $set:{ 
+          image:currentUser.image,
+          email:currentUser.email,
+          name:currentUser.name,
+          role:currentUser.role
+        }
+      }
+      const result = await usersCollection.updateOne(filter, updatedDoc)
+      res.send(result)
+    })
 
 
     // scholarship data post 
@@ -136,7 +152,7 @@ async function run() {
 
 
 
-    
+
 
 
     // Send a ping to confirm a successful connection
