@@ -105,6 +105,33 @@ async function run() {
       res.send(result)
     })
 
+    // update a scholarship data 
+    app.patch('/scholarships/:id', async(req, res) =>{
+      const data = req.body 
+      const id = req.params.id 
+      const filter = {_id : new ObjectId(id)}
+      const updatedDoc = {
+        $set:{
+          postDate: data.postDate,
+          applicationDeadline:data.applicationDeadline,
+          postedUserEmail:data.postedUserEmail,
+          scholarshipName:data.scholarshipName,
+          universityCity:data.universityCity,
+          universityCountry:data.universityCountry,
+          universityName:data.universityName,
+          universityWorldRank:data.universityWorldRank,
+          subjectCategory:data.subjectCategory,
+          scholarshipCategory:data.scholarshipCategory,
+          degree:data.degree,
+          applicationFees:data.applicationFees,
+          serviceCharge:data.serviceCharge,
+          image:data.image
+        }
+      }
+      const result = await scholarshipsCollection.updateOne(filter,updatedDoc)
+      res.send(result)
+    })
+
 
 
 
