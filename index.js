@@ -97,6 +97,14 @@ async function run() {
       res.send(result)
     })
 
+    // delete a scholarship data 
+    app.delete('/scholarships/:id', async (req, res) => {
+      const id = req.params.id 
+      const query = {_id : new ObjectId(id)}
+      const result = await scholarshipsCollection.deleteOne(query)
+      res.send(result)
+    })
+
 
 
 
