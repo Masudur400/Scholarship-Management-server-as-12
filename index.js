@@ -89,6 +89,14 @@ async function run() {
       res.send(result)
     })
 
+    // get scholarship data by id 
+    app.get('/scholarships/:id' ,async(req,res) =>{
+      const id = req.params.id 
+      const query = {_id : new ObjectId(id)}
+      const result = await scholarshipsCollection.findOne(query)
+      res.send(result)
+    })
+
 
 
 
