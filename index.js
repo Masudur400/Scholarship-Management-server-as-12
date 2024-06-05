@@ -34,6 +34,7 @@ async function run() {
     const usersCollection = client.db('scholarShip').collection('users')
     const scholarshipsCollection = client.db('scholarShip').collection('scholarships')
     const reviewsCollection = client.db('scholarShip').collection('reviews')
+    const appliesCollection = client.db('scholarShip').collection('applies')
 
 
 
@@ -153,6 +154,13 @@ async function run() {
      app.post('/reviews', async (req, res) => {
       const data = req.body
       const result = await reviewsCollection.insertOne(data)
+      res.send(result)
+    }) 
+
+     // applies post 
+     app.post('/applies', async (req, res) => {
+      const data = req.body
+      const result = await appliesCollection.insertOne(data)
       res.send(result)
     })
 
