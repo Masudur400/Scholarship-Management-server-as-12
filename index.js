@@ -33,6 +33,7 @@ async function run() {
 
     const usersCollection = client.db('scholarShip').collection('users')
     const scholarshipsCollection = client.db('scholarShip').collection('scholarships')
+    const reviewsCollection = client.db('scholarShip').collection('reviews')
 
 
 
@@ -97,7 +98,7 @@ async function run() {
       const data = req.body
       const result = await scholarshipsCollection.insertOne(data)
       res.send(result)
-    })
+    })  
 
     // get all scholarship data 
     app.get('/scholarships', async (req, res) => {
@@ -119,7 +120,7 @@ async function run() {
       const query = { _id: new ObjectId(id) }
       const result = await scholarshipsCollection.deleteOne(query)
       res.send(result)
-    })
+    })  
 
     // update a scholarship data 
     app.patch('/scholarships/:id', async (req, res) => {
@@ -145,6 +146,13 @@ async function run() {
         }
       }
       const result = await scholarshipsCollection.updateOne(filter, updatedDoc)
+      res.send(result)
+    })
+
+     // review post 
+     app.post('/reviews', async (req, res) => {
+      const data = req.body
+      const result = await reviewsCollection.insertOne(data)
       res.send(result)
     })
 
