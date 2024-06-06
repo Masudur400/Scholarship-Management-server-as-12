@@ -157,6 +157,12 @@ async function run() {
       res.send(result)
     }) 
 
+    // review get 
+     app.get('/reviews', async (req, res) => { 
+      const result = await reviewsCollection.find().toArray()
+      res.send(result)
+    }) 
+
      // applies post 
      app.post('/applies', async (req, res) => {
       const data = req.body
