@@ -172,6 +172,12 @@ async function run() {
       res.send(result)
     })
 
+     // applies get by email 
+     app.get('/applies', async (req, res) => { 
+      const result = await appliesCollection.find().toArray()
+      res.send(result)
+    })
+
      // payment post 
      app.post('/payments', async (req, res) => {
       const data = req.body
