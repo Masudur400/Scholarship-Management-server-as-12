@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const stripe = require("stripe")(process.env.DB_sk)
 const app = express()
 const port = process.env.PORT || 5000
 
@@ -168,6 +169,20 @@ async function run() {
       const data = req.body
       const result = await appliesCollection.insertOne(data)
       res.send(result)
+    })
+
+    // payment intent 
+    app.post('/create-payment-intent', async(req, res) =>{
+      const {fees} = req.body 
+      const amount = parseInt(fees * 100) 
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount:amount,
+        currency: "usd",
+         payment_method_types: [ "card" ],
+      })
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+      });
     })
 
 
