@@ -189,12 +189,38 @@ async function run() {
     })
 
     // applies get By id 
-    // app.get('/applies/:email', async (req, res) =>{
-    //   const email = req.params.email 
-    //   const query = {UserEmail: email}
-    //   const result = await appliesCollection.find(query).toArray()
-    //   res.send(result)
-    // })
+    app.delete('/applies/:id', async (req, res) =>{
+      const id = req.params.id 
+      const query = {_id: new ObjectId(id)}
+      const result = await appliesCollection.deleteOne(query)
+      res.send(result)
+    })
+
+    // update applies by id 
+    app.patch('/applies/:id', async (req, res) => {
+      const data = req.body
+      const id = req.params.id
+      const filter = { _id: new ObjectId(id) }
+      const updatedDoc = {
+        $set: {
+          applicantName:data.applicantName,
+          applicantPhoneNumber: data.applicantPhoneNumber,
+          applicantUniversityName: data.applicantUniversityName,
+          applicantAddress: data.applicantAddress,
+          gender: data.get,
+          applicantSubjectCategory: data.applicantSubjectCategory,
+          applicantScholarshipCategory: data.applicantScholarshipCategory,
+          applicantDegree: data.applicantDegree,
+          SSCresult: data.SSCresult,
+          HSCresult: data.HSCresult,
+          applicantImage: data.applicantImage
+        }
+      }
+      const result = await appliesCollection.updateOne(filter, updatedDoc)
+      res.send(result)
+    })
+
+     
 
      // payment post 
      app.post('/payments', async (req, res) => {
