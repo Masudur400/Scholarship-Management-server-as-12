@@ -181,6 +181,23 @@ async function run() {
       res.send(result)
     })
 
+    // update a review by id 
+    app.patch('/reviews/:id', async (req, res) => {
+      const data = req.body
+      const id = req.params.id
+      const filter = { _id: new ObjectId(id) }
+      const updatedDoc = {
+        $set: {
+          reviewerName: data.reviewerName,
+          ratingPoint: data.ratingPoint,
+          reviewerComments: data.reviewerComments,
+          reviewerImage: data.reviewerImage
+        }
+      }
+      const result = await reviewsCollection.updateOne(filter, updatedDoc)
+      res.send(result)
+    })
+
      // applies post 
      app.post('/applies', async (req, res) => {
       const data = req.body
