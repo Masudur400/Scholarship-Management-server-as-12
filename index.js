@@ -174,7 +174,9 @@ async function run() {
 
      // applies get   
      app.get('/applies', async (req, res) => { 
-      const result = await appliesCollection.find().toArray()
+      const email = req.query.email
+      const query = {UserEmail: email}
+      const result = await appliesCollection.find(query).toArray()
       res.send(result)
     })
 
@@ -185,6 +187,14 @@ async function run() {
       const result = await appliesCollection.findOne(query)
       res.send(result)
     })
+
+    // applies get By id 
+    // app.get('/applies/:email', async (req, res) =>{
+    //   const email = req.params.email 
+    //   const query = {UserEmail: email}
+    //   const result = await appliesCollection.find(query).toArray()
+    //   res.send(result)
+    // })
 
      // payment post 
      app.post('/payments', async (req, res) => {
