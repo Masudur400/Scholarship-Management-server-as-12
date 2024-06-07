@@ -198,6 +198,14 @@ async function run() {
       res.send(result)
     })
 
+    // reviews delete by id 
+    app.delete('/reviews/:id', async(req, res) =>{
+      const id = req.params.id 
+      const query = {_id: new ObjectId(id)}
+      const result = await reviewsCollection.deleteOne(query)
+      res.send(result)
+    })
+
      // applies post 
      app.post('/applies', async (req, res) => {
       const data = req.body
