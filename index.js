@@ -165,6 +165,22 @@ async function run() {
       res.send(result)
     }) 
 
+    // reviews get  by email query 
+    app.get('/reviews/ree', async (req, res) => { 
+      const email = req.query.email
+      const query = {reviewerEmail: email}
+      const result = await reviewsCollection.find(query).toArray()
+      res.send(result)
+    })
+
+    // reviews get By id 
+    app.get('/reviews/:id', async (req, res) =>{
+      const id = req.params.id 
+      const query = {_id: new ObjectId(id)}
+      const result = await reviewsCollection.findOne(query)
+      res.send(result)
+    })
+
      // applies post 
      app.post('/applies', async (req, res) => {
       const data = req.body
@@ -172,7 +188,7 @@ async function run() {
       res.send(result)
     })
 
-     // applies get   
+     // applies get by email query  
      app.get('/applies', async (req, res) => { 
       const email = req.query.email
       const query = {UserEmail: email}
