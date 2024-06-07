@@ -172,9 +172,17 @@ async function run() {
       res.send(result)
     })
 
-     // applies get by email 
+     // applies get   
      app.get('/applies', async (req, res) => { 
       const result = await appliesCollection.find().toArray()
+      res.send(result)
+    })
+
+    // applies get By id 
+    app.get('/applies/:id', async (req, res) =>{
+      const id = req.params.id 
+      const query = {_id: new ObjectId(id)}
+      const result = await appliesCollection.findOne(query)
       res.send(result)
     })
 
