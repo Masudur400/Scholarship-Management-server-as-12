@@ -213,6 +213,12 @@ async function run() {
       res.send(result)
     })
 
+    // applies get 
+    app.get('/applies', async (req, res)=>{
+      const result = await appliesCollection.find().toArray()
+      res.send(result)
+    })
+
      // applies get by email query  
      app.get('/applies', async (req, res) => { 
       const email = req.query.email
@@ -248,18 +254,23 @@ async function run() {
           applicantPhoneNumber: data.applicantPhoneNumber,
           applicantUniversityName: data.applicantUniversityName,
           applicantAddress: data.applicantAddress,
-          gender: data.get,
+          gender: data.gender,
           applicantSubjectCategory: data.applicantSubjectCategory,
           applicantScholarshipCategory: data.applicantScholarshipCategory,
           applicantDegree: data.applicantDegree,
           SSCresult: data.SSCresult,
           HSCresult: data.HSCresult,
+          feedBack: data.feedBack,
+          status : data.status,
           applicantImage: data.applicantImage
         }
       }
       const result = await appliesCollection.updateOne(filter, updatedDoc)
       res.send(result)
     })
+
+
+     
 
      
 
