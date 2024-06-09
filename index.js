@@ -117,11 +117,11 @@ async function run() {
       }
       const query = { email: email }
       const user = await usersCollection.findOne(query)
-      let admin = false
+      let moderator = false
       if (user) {
-        admin = user?.role === 'moderator'
+        moderator = user?.role === 'moderator'
       }
-      res.send({ admin })
+      res.send({ moderator })
     })
 
     // get users by id 
