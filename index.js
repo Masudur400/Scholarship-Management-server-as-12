@@ -63,6 +63,18 @@ async function run() {
       })
     }
 
+    // const verifyAdmin 
+    const verifyAdmin = async (req, res, next) => {
+      const email = req.decoded.email
+      const query = { email: email }
+      const user = await usersCollection.findOne(query)
+      const isAdmin = user?.role === 'admin'
+      if (!isAdmin) {
+        return res.status(403).send({ message: 'forbidden access' })
+      }
+      next()
+    }
+
     // post users 
     app.post('/users', async (req, res) => {
       const user = req.body
@@ -79,6 +91,37 @@ async function run() {
     app.get('/users', async (req, res) => {
       const result = await usersCollection.find().toArray()
       res.send(result)
+    })
+
+    // get admin user 
+    app.get('/users/admin/:email', verifyToken, async (req, res) => {
+      const email = req.params.email
+      if (email !== req.decoded.email) {
+        return res.status(403).send({ message: 'forbidden access !' })
+      }
+      const query = { email: email }
+      const user = await usersCollection.findOne(query)
+      let admin = false
+      if (user) {
+        admin = user?.role === 'admin'
+      }
+      res.send({ admin })
+    })
+
+
+    // get moderator user 
+    app.get('/users/moderator/:email', verifyToken, async (req, res) => {
+      const email = req.params.email
+      if (email !== req.decoded.email) {
+        return res.status(403).send({ message: 'forbidden access !' })
+      }
+      const query = { email: email }
+      const user = await usersCollection.findOne(query)
+      let admin = false
+      if (user) {
+        admin = user?.role === 'moderator'
+      }
+      res.send({ admin })
     })
 
     // get users by id 
