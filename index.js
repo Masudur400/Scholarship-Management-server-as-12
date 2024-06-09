@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const  jwt = require('jsonwebtoken'); 
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const stripe = require("stripe")(process.env.DB_sk)
@@ -38,6 +39,13 @@ async function run() {
     const appliesCollection = client.db('scholarShip').collection('applies')
     const paymentsCollection = client.db('scholarShip').collection('payments')
 
+
+// jwt api 
+app.post('/jwt', async (req, res) => {
+  const user = req.body
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
+  res.send({ token })
+})
 
 
 
@@ -79,8 +87,7 @@ async function run() {
 
     // update user role 
     app.patch('/users/:id', async (req, res) => {
-      const id = req.params.id
-      console.log('patch id', id)
+      const id = req.params.id 
       const currentUser = req.body
       const filter = { _id: new ObjectId(id) }
       const updatedDoc = {
@@ -220,7 +227,7 @@ async function run() {
     })
 
      // applies get by email query  
-     app.get('/applies', async (req, res) => { 
+     app.get('/applies/app', async (req, res) => { 
       const email = req.query.email
       const query = {UserEmail: email}
       const result = await appliesCollection.find(query).toArray()
@@ -267,12 +274,7 @@ async function run() {
       }
       const result = await appliesCollection.updateOne(filter, updatedDoc)
       res.send(result)
-    })
-
-
-     
-
-     
+    })  
 
      // payment post 
      app.post('/payments', async (req, res) => {
