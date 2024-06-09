@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const  jwt = require('jsonwebtoken'); 
+const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const stripe = require("stripe")(process.env.DB_sk)
@@ -40,14 +40,28 @@ async function run() {
     const paymentsCollection = client.db('scholarShip').collection('payments')
 
 
-// jwt api 
-app.post('/jwt', async (req, res) => {
-  const user = req.body
-  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
-  res.send({ token })
-})
+    // jwt api 
+    app.post('/jwt', async (req, res) => {
+      const user = req.body
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
+      res.send({ token })
+    })
 
+    // verify token    
+    const verifyToken = (req, res, next) => {
+      if (!req.headers.authorization) {
+        return res.status(401).send({ message: 'unauthorized access !' })
+      }
+      const token = req.headers.authorization.split(' ')[1]
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+        if (error) {
+          return res.status(401).send({ message: 'unauthorized access !' })
+        }
+        req.decoded = decoded
 
+        next()
+      })
+    }
 
     // post users 
     app.post('/users', async (req, res) => {
@@ -87,7 +101,7 @@ app.post('/jwt', async (req, res) => {
 
     // update user role 
     app.patch('/users/:id', async (req, res) => {
-      const id = req.params.id 
+      const id = req.params.id
       const currentUser = req.body
       const filter = { _id: new ObjectId(id) }
       const updatedDoc = {
@@ -108,7 +122,7 @@ app.post('/jwt', async (req, res) => {
       const data = req.body
       const result = await scholarshipsCollection.insertOne(data)
       res.send(result)
-    })  
+    })
 
     // get all scholarship data 
     app.get('/scholarships', async (req, res) => {
@@ -130,7 +144,7 @@ app.post('/jwt', async (req, res) => {
       const query = { _id: new ObjectId(id) }
       const result = await scholarshipsCollection.deleteOne(query)
       res.send(result)
-    })  
+    })
 
     // update a scholarship data 
     app.patch('/scholarships/:id', async (req, res) => {
@@ -159,31 +173,31 @@ app.post('/jwt', async (req, res) => {
       res.send(result)
     })
 
-     // review post 
-     app.post('/reviews', async (req, res) => {
+    // review post 
+    app.post('/reviews', async (req, res) => {
       const data = req.body
       const result = await reviewsCollection.insertOne(data)
       res.send(result)
-    }) 
+    })
 
     // review get 
-     app.get('/reviews', async (req, res) => { 
+    app.get('/reviews', async (req, res) => {
       const result = await reviewsCollection.find().toArray()
       res.send(result)
-    }) 
+    })
 
     // reviews get  by email query 
-    app.get('/reviews/ree', async (req, res) => { 
+    app.get('/reviews/ree', async (req, res) => {
       const email = req.query.email
-      const query = {reviewerEmail: email}
+      const query = { reviewerEmail: email }
       const result = await reviewsCollection.find(query).toArray()
       res.send(result)
     })
 
     // reviews get By id 
-    app.get('/reviews/:id', async (req, res) =>{
-      const id = req.params.id 
-      const query = {_id: new ObjectId(id)}
+    app.get('/reviews/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await reviewsCollection.findOne(query)
       res.send(result)
     })
@@ -206,46 +220,46 @@ app.post('/jwt', async (req, res) => {
     })
 
     // reviews delete by id 
-    app.delete('/reviews/:id', async(req, res) =>{
-      const id = req.params.id 
-      const query = {_id: new ObjectId(id)}
+    app.delete('/reviews/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await reviewsCollection.deleteOne(query)
       res.send(result)
     })
 
-     // applies post 
-     app.post('/applies', async (req, res) => {
+    // applies post 
+    app.post('/applies', async (req, res) => {
       const data = req.body
       const result = await appliesCollection.insertOne(data)
       res.send(result)
     })
 
     // applies get 
-    app.get('/applies', async (req, res)=>{
+    app.get('/applies', async (req, res) => {
       const result = await appliesCollection.find().toArray()
       res.send(result)
     })
 
-     // applies get by email query  
-     app.get('/applies/app', async (req, res) => { 
+    // applies get by email query  
+    app.get('/applies/app', async (req, res) => {
       const email = req.query.email
-      const query = {UserEmail: email}
+      const query = { UserEmail: email }
       const result = await appliesCollection.find(query).toArray()
       res.send(result)
     })
 
     // applies get By id 
-    app.get('/applies/:id', async (req, res) =>{
-      const id = req.params.id 
-      const query = {_id: new ObjectId(id)}
+    app.get('/applies/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await appliesCollection.findOne(query)
       res.send(result)
     })
 
     // applies get By id 
-    app.delete('/applies/:id', async (req, res) =>{
-      const id = req.params.id 
-      const query = {_id: new ObjectId(id)}
+    app.delete('/applies/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
       const result = await appliesCollection.deleteOne(query)
       res.send(result)
     })
@@ -257,7 +271,7 @@ app.post('/jwt', async (req, res) => {
       const filter = { _id: new ObjectId(id) }
       const updatedDoc = {
         $set: {
-          applicantName:data.applicantName,
+          applicantName: data.applicantName,
           applicantPhoneNumber: data.applicantPhoneNumber,
           applicantUniversityName: data.applicantUniversityName,
           applicantAddress: data.applicantAddress,
@@ -268,29 +282,29 @@ app.post('/jwt', async (req, res) => {
           SSCresult: data.SSCresult,
           HSCresult: data.HSCresult,
           feedBack: data.feedBack,
-          status : data.status,
+          status: data.status,
           applicantImage: data.applicantImage
         }
       }
       const result = await appliesCollection.updateOne(filter, updatedDoc)
       res.send(result)
-    })  
+    })
 
-     // payment post 
-     app.post('/payments', async (req, res) => {
+    // payment post 
+    app.post('/payments', async (req, res) => {
       const data = req.body
       const result = await paymentsCollection.insertOne(data)
       res.send(result)
     })
 
     // payment intent 
-    app.post('/create-payment-intent', async(req, res) =>{
-      const {fees} = req.body 
-      const amount = parseInt(fees * 100) 
+    app.post('/create-payment-intent', async (req, res) => {
+      const { fees } = req.body
+      const amount = parseInt(fees * 100)
       const paymentIntent = await stripe.paymentIntents.create({
-        amount:amount,
+        amount: amount,
         currency: "usd",
-         payment_method_types: [ "card" ],
+        payment_method_types: ["card"],
       })
       res.send({
         clientSecret: paymentIntent.client_secret,
