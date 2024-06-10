@@ -53,6 +53,7 @@ async function run() {
         return res.status(401).send({ message: 'unauthorized access !' })
       }
       const token = req.headers.authorization.split(' ')[1]
+      // console.log(token)
       jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
         if (error) {
           return res.status(401).send({ message: 'unauthorized access !' })
@@ -136,7 +137,7 @@ async function run() {
     }) 
 
     // delete user 
-    app.delete('/users/:id', verifyToken,verifyAdmin, async (req, res) => {
+    app.delete('/users/:id', verifyToken, async (req, res) => {
       const id = req.params.id
       const query = { _id: new ObjectId(id) }
       const result = await usersCollection.deleteOne(query)
@@ -144,7 +145,7 @@ async function run() {
     })
 
     // update user role 
-    app.patch('/users/:id',verifyToken,verifyAdmin,  async (req, res) => {
+    app.patch('/users/:id',verifyToken,  async (req, res) => {
       const id = req.params.id
       const currentUser = req.body
       const filter = { _id: new ObjectId(id) }
@@ -169,7 +170,7 @@ async function run() {
     })
 
     // get all scholarship data 
-    app.get('/scholarships',verifyToken,  async (req, res) => {
+    app.get('/scholarships',  async (req, res) => {
       const result = await scholarshipsCollection.find().toArray()
       res.send(result)
     })
@@ -225,7 +226,7 @@ async function run() {
     })
 
     // review get 
-    app.get('/reviews',verifyToken, async (req, res) => {
+    app.get('/reviews', async (req, res) => {
       const result = await reviewsCollection.find().toArray()
       res.send(result)
     })
